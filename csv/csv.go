@@ -1,7 +1,6 @@
 package csv
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,8 @@ import (
 func ExportInCSV(c *gin.Context) {
 	file, err := ioutil.TempFile("downloads", "employee-*.csv")
 	if err != nil {
-		fmt.Println("Error occurred : ", err)
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
 	}
 	defer file.Close()
 
@@ -19,4 +19,18 @@ func ExportInCSV(c *gin.Context) {
 	gocsv.MarshalFile(&data, file)
 
 	c.JSON(200, gin.H{"message": "success"})
+}
+
+func ExportRecords(c *gin.Context) {
+	data := getData()
+
+	csvBytes, err := gocsv.MarshalBytes(&data)
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Writer.Header().Set("Content-Type", "text/csv")
+	c.Writer.WriteHeader(200)
+	c.Writer.Write(csvBytes)
 }

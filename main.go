@@ -19,5 +19,7 @@ func main() {
 
 	router.GET("/export-csv", csv.ExportInCSV)
 
+	router.GET("/export-records", csv.ExportRecords)
+
 	router.Run(":5000")
 }
