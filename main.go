@@ -21,5 +21,7 @@ func main() {
 
 	router.GET("/export-records", csv.ExportRecords)
 
+	router.POST("/upload-csv", csv.UploadCSV)
+
 	router.Run(":5000")
 }
